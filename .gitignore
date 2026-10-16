@@ -1,0 +1,9 @@
+# eval runs (skill-creator workspaces)
+*-workspace/
+
+# Python
+__pycache__/
+*.pyc
+
+# macOS
+.DS_Store
