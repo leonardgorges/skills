@@ -1,0 +1,30 @@
+{
+  "skill_name": "review-typography",
+  "note": "File paths are relative to the repository root. The skill is manual-only, so with-skill runs invoke it explicitly. Baseline runs get the same request in plain words. Runs must not modify the fixtures.",
+  "evals": [
+    {
+      "id": 1,
+      "name": "review-landing-en",
+      "prompt": "Review the typography of our landing page in fixtures/landing-en (index.html and style.css).",
+      "expected_output": "A report in the fixed format (findings table with severity, location, before, after, why; decisions; what held up; how it was checked; verdict). It catches:\n- the h1 clamp() with max/min 3.33, which fails 200 % zoom;\n- the fixed-height .card h3 with overflow hidden, which clips under text-spacing overrides;\n- word-break: break-all on .stat;\n- text-wrap: balance on the long .lead;\n- tracked body text;\n- the uppercase eyebrow without tracking;\n- straight quotes, the straight apostrophe and the -- in the copy;\n- missing tabular figures in the pricing table and the counter.\nIt credits what held up: lang, the rem-based body clamp, line-height 1.6, the 65ch measure, pretty and hyphens. It doesn't nitpick. The verdict is Fix first, and no files are modified.",
+      "files": ["fixtures/landing-en/index.html", "fixtures/landing-en/style.css"],
+      "expectations": []
+    },
+    {
+      "id": 2,
+      "name": "review-blog-de-quick",
+      "prompt": "Quick typography review of fixtures/blog-de, please. Only what matters most.",
+      "expected_output": "A quick-mode report with at most about 7 rows, ordered by severity. The top items: the missing lang (which breaks hyphenation) and blocked zoom; the vw-only h1 and the px root size; justified text without hyphenation on phones; the 1100 px measure (about 90 characters); the long compounds overflowing at 320-375 px. It may group the microtypography issues into one row. Verdict: Fix first. No files are modified.",
+      "files": ["fixtures/blog-de/index.html", "fixtures/blog-de/style.css"],
+      "expectations": []
+    },
+    {
+      "id": 3,
+      "name": "review-print-pages",
+      "prompt": "Review only the page and column breaks of the PDF export in fixtures/report-print (generated with headless Chrome, A4).",
+      "expected_output": "A focused report covering:\n- orphans and widows set to 1;\n- no @page rule;\n- headings not kept with their text;\n- figures and tables not protected from breaks;\n- the legacy page-break-before;\n- three justified columns without hyphenation (a measure of about 30-35 characters, gaps);\n- the engine note that Chrome honours widows and orphans.\nIt names Hurenkind (widow) and Schusterjunge (orphan) correctly and gives exact target values. It stays within the requested focus, says how it was checked (rendered or inferred), and modifies no files.",
+      "files": ["fixtures/report-print/report.html", "fixtures/report-print/print.css"],
+      "expectations": []
+    }
+  ]
+}

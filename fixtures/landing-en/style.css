@@ -1,0 +1,49 @@
+:root { --measure: 65ch; }
+
+html { font-size: 100%; }
+
+body {
+  font-family: "Inter", system-ui, sans-serif;
+  font-size: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
+  line-height: 1.6;
+  letter-spacing: 0.03em;
+  margin: 0;
+  color: #1d1d1f;
+}
+
+.hero,
+main > section { max-width: 72rem; margin: 0 auto; padding: 4rem 1.5rem; }
+
+.eyebrow { text-transform: uppercase; font-size: 0.8rem; font-weight: 600; }
+
+h1 {
+  font-size: clamp(1.5rem, 1rem + 5vw, 5rem);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+  max-width: 18ch;
+}
+
+.lead { font-size: 1.25rem; max-width: var(--measure); text-wrap: balance; }
+
+p { max-width: var(--measure); text-wrap: pretty; hyphens: auto; }
+
+.features {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+  gap: 2rem;
+}
+
+.card h3 {
+  height: 2.6em;
+  overflow: hidden;
+  font-size: 1.25rem;
+  line-height: 1.3;
+}
+
+blockquote p { font-size: 1.5rem; line-height: 1.4; }
+
+.pricing td,
+.pricing th { padding: 0.5rem 1rem; text-align: right; }
+
+.stat { font-size: clamp(2.5rem, 8vw, 6rem); font-weight: 700; word-break: break-all; }
