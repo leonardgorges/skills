@@ -7,24 +7,63 @@
       "name": "review-landing-en",
       "prompt": "Review the typography of our landing page in fixtures/landing-en (index.html and style.css).",
       "expected_output": "A report in the fixed format (findings table with severity, location, before, after, why; decisions; what held up; how it was checked; verdict). It catches:\n- the h1 clamp() with max/min 3.33, which fails 200 % zoom;\n- the fixed-height .card h3 with overflow hidden, which clips under text-spacing overrides;\n- word-break: break-all on .stat;\n- text-wrap: balance on the long .lead;\n- tracked body text;\n- the uppercase eyebrow without tracking;\n- straight quotes, the straight apostrophe and the -- in the copy;\n- missing tabular figures in the pricing table and the counter.\nIt credits what held up: lang, the rem-based body clamp, line-height 1.6, the 65ch measure, pretty and hyphens. It doesn't nitpick. The verdict is Fix first, and no files are modified.",
-      "files": ["fixtures/landing-en/index.html", "fixtures/landing-en/style.css"],
-      "expectations": []
+      "files": [
+        "fixtures/landing-en/index.html",
+        "fixtures/landing-en/style.css"
+      ],
+      "expectations": [
+        "No files were modified (the review is read-only)",
+        "Flags the h1 clamp(): max/min of 3.33 exceeds 2.5 and fails 200 % zoom",
+        "Flags the fixed-height .card h3 with overflow: hidden",
+        "Flags word-break: break-all on .stat",
+        "Flags text-wrap: balance on the long .lead paragraph",
+        "Flags the straight quotes or apostrophe and the -- in the copy",
+        "Flags missing tabular figures in the pricing table or counter",
+        "Flags letter-spacing on the body text",
+        "Credits what already works (lang, body clamp, line-height, measure, pretty and hyphens)",
+        "Ends with a clear verdict"
+      ]
     },
     {
       "id": 2,
       "name": "review-blog-de-quick",
       "prompt": "Quick typography review of fixtures/blog-de, please. Only what matters most.",
       "expected_output": "A quick-mode report with at most about 7 rows, ordered by severity. The top items: the missing lang (which breaks hyphenation) and blocked zoom; the vw-only h1 and the px root size; justified text without hyphenation on phones; the 1100 px measure (about 90 characters); the long compounds overflowing at 320-375 px. It may group the microtypography issues into one row. Verdict: Fix first. No files are modified.",
-      "files": ["fixtures/blog-de/index.html", "fixtures/blog-de/style.css"],
-      "expectations": []
+      "files": [
+        "fixtures/blog-de/index.html",
+        "fixtures/blog-de/style.css"
+      ],
+      "expectations": [
+        "No files were modified (the review is read-only)",
+        "Flags the missing lang attribute",
+        "Flags blocked zoom (maximum-scale=1)",
+        "Flags the vw-only h1 or the px root font size",
+        "Flags justified text without hyphenation",
+        "Flags the over-long measure (about 90 characters per line)",
+        "Flags long German compounds overflowing on phones",
+        "Stays quick: at most 8 findings"
+      ]
     },
     {
       "id": 3,
       "name": "review-print-pages",
       "prompt": "Review only the page and column breaks of the PDF export in fixtures/report-print (generated with headless Chrome, A4).",
       "expected_output": "A focused report covering:\n- orphans and widows set to 1;\n- no @page rule;\n- headings not kept with their text;\n- figures and tables not protected from breaks;\n- the legacy page-break-before;\n- three justified columns without hyphenation (a measure of about 30-35 characters, gaps);\n- the engine note that Chrome honours widows and orphans.\nIt names Hurenkind (widow) and Schusterjunge (orphan) correctly and gives exact target values. It stays within the requested focus, says how it was checked (rendered or inferred), and modifies no files.",
-      "files": ["fixtures/report-print/report.html", "fixtures/report-print/print.css"],
-      "expectations": []
+      "files": [
+        "fixtures/report-print/report.html",
+        "fixtures/report-print/print.css"
+      ],
+      "expectations": [
+        "No files were modified (the review is read-only)",
+        "Flags orphans: 1 and widows: 1",
+        "Flags the missing @page rule",
+        "Flags headings that are not kept with their text",
+        "Flags figures and tables that can split across pages",
+        "Flags the legacy page-break-before",
+        "Flags the narrow justified three-column text without hyphenation",
+        "Gives exact target values (for example orphans 2-3, @page margins in mm)",
+        "Stays within the requested focus on page and column breaks"
+      ]
     }
   ]
 }

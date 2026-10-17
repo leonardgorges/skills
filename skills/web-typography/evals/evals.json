@@ -7,16 +7,48 @@
       "name": "german-blog-mobile",
       "prompt": "kannst du die typo in meinem vereinsblog verbessern? die dateien liegen in fixtures/blog-de (index.html und style.css). auf dem handy sieht der text irgendwie komisch aus, es gibt so große lücken zwischen den wörtern und manchmal steht ein wort ganz allein in der letzten zeile. bitte direkt in den dateien ändern und kurz erklären, was du warum gemacht hast",
       "expected_output": "Edits both files. Sets lang=\"de\" and unblocks zoom. Removes or limits justification and turns on hyphens: auto. Caps the measure (about 60-70ch). Replaces the px root size and the vw-only h1 with rem-based clamp() (max at most 2.5 x min). Raises leading to about 1.5, removes body tracking, adds text-wrap pretty and balance, and replaces the fixed-height card titles. Fixes microtypography: „…“, z. B. and d. h. with U+202F, en dashes, the ellipsis, 2019–2021, 80 %, 5 MB, S. 12. Deals with the long compounds overflowing at 375 px. Explains each change by its effect on reading, in German.",
-      "files": ["fixtures/blog-de/index.html", "fixtures/blog-de/style.css"],
-      "expectations": []
+      "files": [
+        "fixtures/blog-de/index.html",
+        "fixtures/blog-de/style.css"
+      ],
+      "expectations": [
+        "index.html declares German: lang=\"de\" on <html>",
+        "Pinch zoom is no longer blocked by the viewport meta tag",
+        "No px root font size",
+        "Headline sizes are zoom-safe: no vw-only size and no clamp() above 2.5x",
+        "Automatic hyphenation is switched on (hyphens: auto)",
+        "Running text is no longer justified at phone widths, and never without hyphenation",
+        "Line length is capped in ch or em",
+        "Body text leading is at least 1.4 (unitless)",
+        "text-wrap: pretty or balance is used against runts and ragged headings",
+        "Fixed-height card titles no longer clip text",
+        "Straight quotes, z.B./d.h., spaced hyphens and \"...\" are corrected in the text",
+        "Long compounds in headings can break on phones (hyphenation or overflow-wrap reaches the headings, or &shy;)",
+        "The author's wording is preserved (word sequence at least 97% similar)",
+        "The reply explains the changes in German, each with its effect on reading"
+      ]
     },
     {
       "id": 2,
       "name": "print-report-widows",
       "prompt": "We export our annual report to PDF with headless Chrome (Puppeteer page.pdf, A4). The files are in fixtures/report-print. Problem: h3 headings end up alone at the bottom of a page, single lines get stranded at the top of columns, and the three columns look cramped and full of gaps. Can you fix print.css and give it proper A4 margins? Explain the choices briefly.",
       "expected_output": "Adds @page size A4 with deliberate margins and gives the reasoning (for example 9 x 9 grid proportions, bottom margin largest). Sets orphans and widows to 2-3 and keeps headings with their text (break-after: avoid or a keep-with-next wrapper). Adds break-inside: avoid on figures, tables and rows. Replaces page-break-before with break-before. Fixes the cramped columns: two columns, or hyphens: auto, or ragged text, so the column measure is about 40-50 characters. Raises the leading slightly and adds tabular figures in the table. Names the widow (Hurenkind) and orphan (Schusterjunge) correctly. Notes that Chrome supports widows and orphans while Firefox does not.",
-      "files": ["fixtures/report-print/report.html", "fixtures/report-print/print.css"],
-      "expectations": []
+      "files": [
+        "fixtures/report-print/report.html",
+        "fixtures/report-print/print.css"
+      ],
+      "expectations": [
+        "@page sets A4 and explicit margins",
+        "orphans and widows are at least 2 (no value of 1 left)",
+        "Headings are kept with their text (break-after: avoid on headings, or a keep-with-next wrapper)",
+        "Figures and tables are protected from splitting (break-inside: avoid)",
+        "Uses break-before instead of only the legacy page-break-before",
+        "Columns get a workable measure: at most two columns, or hyphenation on",
+        "Justified text only together with hyphenation",
+        "The table uses tabular figures",
+        "The reply notes that Firefox ignores widows/orphans (only Chromium and WebKit honour them)",
+        "The reply describes widow and orphan correctly (widow: last line alone at the top; orphan: first line alone at the bottom)"
+      ]
     },
     {
       "id": 3,
@@ -24,7 +56,16 @@
       "prompt": "Für die Website einer kleinen Anwaltskanzlei (Texte fast nur auf Deutsch, viele lange Fachartikel) schwanke ich zwischen Playfair Display für Überschriften + Montserrat für den Fließtext, oder Source Serif 4 + Source Sans 3. Was passt besser und warum? Gib mir bitte auch eine Empfehlung für die CSS-Grundeinstellungen.",
       "expected_output": "Compares both pairs along concrete dimensions: form principle, proportions and width, x-height, contrast and texture, reading mode. Notes that Playfair's high contrast suits display sizes only, and that wide geometric Montserrat is tiring for long German body text, where wide letters make long compounds break more often. Notes that the Source pair is a superfamily (concord) and suits long-form reading. Recommends with reasons, for example Source Serif 4 for the articles and Source Sans 3 for UI and headings, or offers an alternative. Mentions checking German glyphs (ẞ, „“) and testing with real text. Gives a CSS baseline: lang, rem-based clamp(), a 60-70ch measure, line-height about 1.5, hyphens: auto, text-wrap, tabular figures where needed. Answers in German.",
       "files": [],
-      "expectations": []
+      "expectations": [
+        "The reply is in German",
+        "Compares the pairs on concrete dimensions such as x-height, width or proportions, and contrast",
+        "Says Playfair Display's high contrast suits display sizes, not small or long text",
+        "Flags Montserrat as a weak fit for long German body text and says why",
+        "Recognises Source Serif 4 and Source Sans 3 as one superfamily designed to work together",
+        "Gives one clear recommendation",
+        "The CSS baseline uses rem-based clamp(), a ch or em measure, unitless line-height, lang and hyphens: auto",
+        "Mentions checking German glyphs or language support (ß/ẞ, „“, umlauts)"
+      ]
     }
   ]
 }
