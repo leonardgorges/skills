@@ -1,6 +1,6 @@
-# typography-skill
+# skills
 
-Agent skills for web typography in German and English, covering HTML/CSS, multi-column layouts, print stylesheets and CSS-generated PDFs.
+Agent skills for Claude Code. The first set covers web typography in German and English: HTML/CSS, multi-column layouts, print stylesheets and CSS-generated PDFs.
 
 **Status:** draft, under construction.
 
