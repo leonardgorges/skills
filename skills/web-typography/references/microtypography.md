@@ -11,6 +11,7 @@
 8. Hanging punctuation
 9. CSS features at a glance
 10. Glossary (German and English)
+11. Language tags and regional variants
 
 Rules marked † come from standard German typesetting literature (Duden, Forssman & de Jong *Detailtypografie*, Willberg & Forssman) and were not re-checked against a source for this skill.
 
@@ -164,3 +165,24 @@ Optical margin alignment (optischer Randausgleich) lets quotation marks, hyphens
 | Schriftsippe | superfamily | serif and sans built on the same design |
 | Leserlichkeit / Lesbarkeit | legibility / readability | how well letterforms can be told apart, versus how well arranged text reads |
 | Optischer Randausgleich | optical margin alignment | hanging punctuation |
+
+## 11. Language tags and regional variants
+
+**Why it matters:** `lang` decides the hyphenation dictionary, the marks `quotes: auto` and `<q>` produce, and the screen reader's voice. A wrong tag is worse than it looks. With `lang="en"` on German text, the browser hyphenates German words with English patterns (or not at all), and screen readers read German with English pronunciation.
+
+- **Check the tag against the text,** not just whether it exists. `check_text.py` reports `lang-mismatch` when the text clearly reads as another language.
+- **Region:**
+  - `de-DE`, `de-AT` and plain `de` share the conventions in sections 1–4.
+  - `de-CH` differs, see below.
+  - `en-GB` and `en-US` differ in spelling and quotation style. Match the tag to the copy.
+- **Passages in another language** get their own tag: `<span lang="en">…</span>`. This is the case for a quotation, a title or a term. The quotation marks around such a passage usually follow the *surrounding* language †, so put the tag on an element inside the marks: `„<span lang="en">The harbour never sleeps</span>“`. If you use `<q>`, note that its marks follow the `q` element's own language, so set `lang` on a span inside it rather than on the `q`.
+
+**Swiss German (`de-CH`)** †
+
+| Topic | Convention |
+| --- | --- |
+| Quotation marks | «…» outside, ‹…› inside, without spaces |
+| ß | not used: always ss ("Strasse", "gross"). Never convert ss to ß in Swiss text |
+| Amounts | `Fr. 120.–` or `CHF 120.–` for round amounts, `Fr. 12.50` with a decimal point |
+| Thousands | apostrophe: `18’450` (typographically U+2019; plain ' is common). Don't convert it to `18.450` |
+| Vocabulary | Swiss words such as "innert", "Velo" or "parkieren" are correct; never "correct" them |

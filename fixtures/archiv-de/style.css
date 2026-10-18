@@ -1,0 +1,6 @@
+html { font-size: 100%; }
+body { font-family: "Source Sans 3", Arial, sans-serif; font-size: 1.0625rem; line-height: 1.5; margin: 0; color: #222; }
+.archiv { max-width: 34em; margin: 0 auto; padding: 1rem; }
+.issues { list-style: none; padding: 0; }
+.issues h2 { font-size: 1.25rem; line-height: 1.2; margin: 1.5rem 0 0.25rem; }
+.issues p { margin: 0; hyphens: auto; }

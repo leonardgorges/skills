@@ -118,7 +118,9 @@ At 320 px with 16–18 px type, a line holds only about 30–40 characters. Germ
 ## 9. Font loading and fallback metrics
 
 - **Fallback metrics:** use `font-display: swap` (or `optional` for body text when layout stability matters most). Match the fallback's metrics to reduce layout shift when the web font arrives. The `@font-face` descriptors `size-adjust`, `ascent-override`, `descent-override` and `line-gap-override` do this †.
-- **x-height matching:** `font-size-adjust` (Chrome 127+, Firefox 118+, Safari 17+) scales a font so that its x-height matches a given ratio. `font-size-adjust: from-font` takes the ratio from the first available font. This keeps fallbacks and mixed fonts visually the same size.
+- **x-height matching:** `font-size-adjust` (Chrome 127+, Firefox 118+, Safari 17+) scales a font so that its x-height matches a given ratio.
+  - To make the fallback match the web font while it loads, set the web font's measured ratio as a number, for example `font-size-adjust: 0.475`.
+  - `from-font` doesn't do this: it reads the *first available* font, which during loading is the fallback itself. See type-pairing.md, section 5.
 - **Load only the weights and styles you use.** Each one is a file. A variable font often replaces four or more static files.
 
 ## 10. Dark mode

@@ -2,7 +2,6 @@
 name: review-typography
 description: Strict typographic review of web pages, multi-column layouts, print stylesheets and CSS-generated PDFs in German or English. Checks line breaks and runts, hyphenation, measure and leading, widows and orphans, fluid type and zoom, typeface pairing and microtypography. Returns a fixed report with severity, before-and-after fixes, the reason for each, and a verdict. Read-only until the user asks for fixes.
 disable-model-invocation: true
-argument-hint: "[path or URL] [quick|deep] [breaks|pages|responsive|pairing|micro]"
 ---
 
 # Reviewing typography
@@ -23,7 +22,7 @@ Be strict on the floors and use judgement above them.
 
 ## Inputs
 
-`$ARGUMENTS` can contain:
+The user's request can contain:
 
 - **Target:** a file, folder or URL. The default is the project's main templates and stylesheets.
 - **Effort:**
@@ -55,11 +54,11 @@ Map the following before judging anything:
 
 ### 2. Automated sweep
 
-If the `web-typography` skill sits next to this one, run its scripts:
+If the `web-typography` skill sits next to this one, run its scripts. `<skill-dir>` is the folder that contains this SKILL.md:
 
 ```bash
-python3 ${CLAUDE_SKILL_DIR}/../web-typography/scripts/audit_css.py <target>
-python3 ${CLAUDE_SKILL_DIR}/../web-typography/scripts/check_text.py <target>
+python3 <skill-dir>/../web-typography/scripts/audit_css.py <target>
+python3 <skill-dir>/../web-typography/scripts/check_text.py <target>
 ```
 
 If that folder doesn't exist, search with the patterns in [STANDARDS.md](STANDARDS.md#smells-to-search-for) instead. For Tailwind or Sass projects, audit the compiled CSS or read the config.
@@ -91,7 +90,7 @@ Use the format below, then stop. Apply fixes only when asked.
 
 Every finding should map to one of these. The exact values are in [STANDARDS.md](STANDARDS.md).
 
-1. **Language is declared.** `lang` is set on `html` and on every passage in another language. Hyphenation, quotation marks and screen readers depend on it.
+1. **Language is declared, and correct.** `lang` on `html` matches the content and region (`de-DE`, `de-AT`, `de-CH`), and every passage in another language has its own `lang`. Hyphenation, quotation marks and screen readers depend on it, so a wrong tag is as bad as a missing one.
 2. **The measure fits the reading mode.** Running text has 45–75 characters per line, 40–50 in multi-column layouts. It is measured, not assumed.
 3. **Leading scales with the text.** It is unitless: about 1.4–1.6 for body text, 1.05–1.25 for headings.
 4. **Text scales with the reader.**

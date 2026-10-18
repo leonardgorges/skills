@@ -1,0 +1,7 @@
+# Codex only (Claude Code ignores this file; there, disable-model-invocation in SKILL.md does the same).
+# The review runs only when invoked explicitly: $review-typography
+interface:
+  display_name: "Review typography"
+  short_description: "Strict typography review of web pages and print CSS, German and English"
+policy:
+  allow_implicit_invocation: false

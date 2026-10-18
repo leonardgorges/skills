@@ -322,7 +322,8 @@ def check_rule(rule, facts, out):
     # clipping
     height = rule.last('height', 'block-size')
     overflow = rule.last('overflow', 'overflow-y', 'overflow-block')
-    if height and re.match(r'^\d*\.?\d+(px|r?em|lh|ex|ch)$', height[0].strip().lower()):
+    hidden_helper = rule.last('clip', 'clip-path') or (height and re.match(r'^[0-2](\.\d+)?px$', height[0].strip().lower()))
+    if height and not hidden_helper and re.match(r'^\d*\.?\d+(px|r?em|lh|ex|ch)$', height[0].strip().lower()):
         if (overflow and re.search(r'hidden|clip', overflow[0], re.I)) or rule.last('text-overflow'):
             emit('warn', 'fixed-height-text',
                  'fixed height with hidden overflow clips text when copy is longer or readers enlarge spacing (WCAG 1.4.12); use min-height, or line-clamp plus a way to read the full text', height[1])
@@ -387,7 +388,9 @@ def check_globals(rules, html_files, css_seen, facts, out):
     if small_caps and not any(p.startswith('font-synthesis') and 'none' in v for _, p, v, _ in decls):
         emit('info', 'small-caps-synthesis', 'small caps without font-synthesis: none: browsers fake missing small caps with shrunken capitals')
     families = []
-    for _, p, v, _ in decls:
+    for r, p, v, _ in decls:
+        if r.selector.lower().startswith('@font-face'):
+            continue  # descriptors that name a face (often a fallback alias), not a family in use
         if p in ('font-family', 'font'):
             fam = first_family(v if p == 'font-family' else re.sub(r'^.*?\d\S*\s+', '', v, count=1))
             if fam and fam not in families:

@@ -1,0 +1,7 @@
+body { font-family: system-ui, sans-serif; font-size: 1rem; line-height: 1.5; margin: 0; color: #1a1a1a; }
+.hero { padding: 3rem 1.5rem; max-width: 70rem; margin: 0 auto; }
+h1 { font-size: 7vw; line-height: 1.05; }
+.lead { font-size: 1.25rem; max-width: 60ch; }
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); gap: 1.5rem; padding: 0 1.5rem; max-width: 70rem; margin: 0 auto; }
+.card-title { height: 1.3em; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font-size: 1.25rem; }
+.visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }

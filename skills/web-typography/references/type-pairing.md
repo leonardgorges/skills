@@ -69,14 +69,15 @@ async function fontMetrics(family) {
 ```
 
 - **Typical x-height ratios:** about 0.45–0.50 is moderate (many classical serifs), and about 0.52–0.55 or more is large (many screen-oriented sans faces) †. Differences above about 0.04 are visible side by side.
-- **Equalising with `font-size-adjust`** (Chrome 127+, Firefox 118+, Safari 17+): the value is the desired x-height ratio. Set it to the ratio of the primary face, and the other face is scaled to match:
+- **Equalising with `font-size-adjust`** (Chrome 127+, Firefox 118+, Safari 17+): the value is the desired x-height ratio. Every font used for the element is scaled so that its x-height equals that ratio × the font size. Set a **number**, the measured ratio of the primary face:
 
   ```css
-  body  { font-family: "Source Serif 4", Georgia, serif; font-size-adjust: from-font; }
-  code  { font-family: "JetBrains Mono", monospace; font-size-adjust: 0.48; } /* the body font's x-height ratio */
+  body { font-family: "Source Serif 4", Georgia, serif; font-size-adjust: 0.475; } /* Source Serif 4's own ratio:
+                                                    it stays as it is; Georgia is scaled to match while it loads */
+  code { font-family: "JetBrains Mono", monospace; font-size-adjust: 0.475; }      /* same x-height as the body text */
   ```
 
-- `from-font` takes the ratio from the first available font in the stack. It also makes fallback fonts match while the web font loads.
+- **`from-font` doesn't match fallbacks.** It takes the ratio from the element's *first available* font. While the web font is still loading, that is the fallback itself, so nothing is adjusted. It is useful the other way round: set on a parent, it resolves to the parent font's ratio and is inherited as that number †, so inline code or quotes in another face are scaled to the parent's x-height.
 
 ## 6. German and English coverage check
 

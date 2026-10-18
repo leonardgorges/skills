@@ -46,7 +46,6 @@
         "Columns get a workable measure: at most two columns, or hyphenation on",
         "Justified text only together with hyphenation",
         "The table uses tabular figures",
-        "The reply notes that Firefox ignores widows/orphans (only Chromium and WebKit honour them)",
         "The reply describes widow and orphan correctly (widow: last line alone at the top; orphan: first line alone at the bottom)"
       ]
     },
@@ -65,6 +64,62 @@
         "Gives one clear recommendation",
         "The CSS baseline uses rem-based clamp(), a ch or em measure, unitless line-height, lang and hyphens: auto",
         "Mentions checking German glyphs or language support (ß/ẞ, „“, umlauts)"
+      ]
+    },
+    {
+      "id": 4,
+      "name": "swiss-club-de-ch",
+      "round": 2,
+      "prompt": "kannst du die typografie auf unserer vereinsseite verbessern? die dateien liegen in fixtures/verein-ch. bitte direkt in den dateien ändern und kurz sagen, was du gemacht hast",
+      "expected_output": "Recognises the Swiss page (lang=\"de-CH\", \"Strasse\", \"gross\", \"innert\", Fr. 120.–, CHF 18'450.–) and applies Swiss conventions: «…» guillemets, no ß, amounts and the apostrophe thousands separator kept (typographic ’ is fine). Fixes the spaced hyphen, the ellipsis, z. B. and S. 2. Does not \"correct\" Swiss words or numbers to German conventions. Explains in German.",
+      "files": [
+        "fixtures/verein-ch/index.html",
+        "fixtures/verein-ch/style.css"
+      ],
+      "expectations": [
+        "Uses Swiss guillemets «…» and no German „…“ quotes",
+        "No ß introduced (Swiss German writes ss)",
+        "Swiss amounts keep their format (Fr. 120.–, no decimal comma, no thousands dot)",
+        "Straight quotes, z.B., spaced hyphens and \"...\" are corrected",
+        "The author's wording is preserved (word sequence at least 97% similar)",
+        "The reply names the Swiss conventions it followed («», ss, Swiss number formats)"
+      ]
+    },
+    {
+      "id": 5,
+      "name": "brand-justified-magazine",
+      "round": 2,
+      "prompt": "auf dem handy hat unser magazin-artikel riesige lücken zwischen den wörtern. kannst du das fixen? die dateien liegen in fixtures/magazin-de",
+      "expected_output": "Notices the CSS comment that justified text is a brand rule (\"nicht ändern, ohne die Markenabteilung zu fragen\"). Keeps justification (at least on wider screens) and fixes the gaps with hyphenation, or explicitly raises the conflict instead of silently switching to ragged text. Also marks the English quotation with lang=\"en\" inside German quotation marks, and suppresses ligatures at compound boundaries (Auflage, Kaufleute, Schifffahrt).",
+      "files": [
+        "fixtures/magazin-de/index.html",
+        "fixtures/magazin-de/style.css"
+      ],
+      "expectations": [
+        "Justified text gets hyphenation (no justification without hyphens: auto)",
+        "The English quotation is marked lang=\"en\"",
+        "Ligatures are kept off at compound boundaries (no-common-ligatures, or &zwnj; in Auflage and Kaufleute)",
+        "Straight quotes are replaced",
+        "The author's wording is preserved (word sequence at least 97% similar)",
+        "Respects or explicitly raises the documented brand rule for justified text instead of silently dropping it"
+      ]
+    },
+    {
+      "id": 6,
+      "name": "runt-free-archive",
+      "round": 2,
+      "prompt": "bitte sorg dafür, dass in unserem newsletter-archiv nie wieder ein einzelnes wort allein in der letzten zeile steht, egal auf welchem gerät. die dateien liegen in fixtures/archiv-de, bitte direkt ändern.",
+      "expected_output": "Applies text-wrap: pretty (and balance on headings), keeps hyphenation, and binds only short last word pairs if anything. Adds no <br> and doesn't rewrite the teasers. Says honestly that no runts on every device cannot be guaranteed: line breaks depend on width and font, and Firefox ignores pretty.",
+      "files": [
+        "fixtures/archiv-de/index.html",
+        "fixtures/archiv-de/style.css"
+      ],
+      "expectations": [
+        "text-wrap: pretty is applied to the teasers",
+        "No <br> added",
+        "Only short word pairs are bound with no-break spaces (at most 20 characters each)",
+        "The author's wording is preserved (word sequence at least 97% similar)",
+        "The reply says plainly that runt-free text can't be guaranteed at every width and in every browser"
       ]
     }
   ]

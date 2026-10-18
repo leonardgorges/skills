@@ -87,6 +87,8 @@ These are the exact values to cite in findings. They mirror `web-typography/refe
 | Figures | tabular in tables, prices and counters; old-style optional in running text | same |
 | Capitals | tracked 5–12 %; ẞ or SS | tracked 5–12 % |
 | Ligatures | none across compound boundaries (Auf\|lage) | standard |
+| Swiss German (de-CH) † | «…» ‹…›, no ß (ss), `Fr. 120.–`, thousands `18’450`; never "correct" these to German conventions | — |
+| Language tag | matches the content and region; foreign passages get their own `lang`; a wrong tag (`lang="en"` on German text) is a finding | same |
 
 ## 2. Smells to search for
 
@@ -94,6 +96,7 @@ Use these when the sibling skill's scripts aren't available (`grep -nE` or `rg`)
 
 **HTML**
 - `<html` without `lang=`: missing language. This breaks hyphenation, quotes and screen readers.
+- `lang="en"` (or any tag) on text in another language: compare the tag with the text. A wrong tag breaks hyphenation, quotes and screen readers just like a missing one.
 - `user-scalable *= *(no|0)|maximum-scale *= *1(\.0)?\b`: zoom blocked.
 - `<br` inside a `<p>`: a manual break patch that only holds at one width.
 

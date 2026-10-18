@@ -114,15 +114,39 @@ def extract(raw, kind):
     return ''.join(out), offsets
 
 
-def detect_lang(raw, kind, text):
-    if kind == 'html':
-        m = re.search(r'<html\b[^>]*\blang\s*=\s*["\']?([a-zA-Z]{2})', raw, re.I)
-        if m:
-            return m.group(1).lower()
+def _base(lang):
+    return lang.split('-')[0]
+
+
+def _swiss(lang):
+    return lang in ('de-ch', 'de-li')
+
+
+def declared_lang(raw):
+    """(tag, offset) of <html lang=...>, or (None, None)."""
+    m = re.search(r'<html\b[^>]*\blang\s*=\s*["\']?([a-zA-Z]{2,3}(?:-[a-zA-Z]{2})?)', raw, re.I)
+    return (m.group(1).lower(), m.start()) if m else (None, None)
+
+
+def content_lang(text):
+    """'de' or 'en' when the text clearly reads as one of them, else None."""
     words = re.findall(r'[a-zäöüß]+', text.lower())
     de = sum(w in DE_WORDS for w in words)
     en = sum(w in EN_WORDS for w in words)
-    return 'de' if de > en else 'en'
+    if de >= 8 and de > 2 * en:
+        return 'de'
+    if en >= 8 and en > 2 * de:
+        return 'en'
+    return None
+
+
+def detect_lang(raw, kind, text):
+    if kind == 'html':
+        tag, _ = declared_lang(raw)
+        if tag:
+            guess = content_lang(text)
+            return tag if not guess or _base(tag) == guess else guess  # a wrong tag is reported separately
+    return content_lang(text) or 'en'
 
 
 # ---------------------------------------------------------------- rules
@@ -133,8 +157,12 @@ def is_open_position(text, i):
 
 
 def rule_quotes(text, lang):
-    open_d, close_d = ('„', '“') if lang == 'de' else ('“', '”')
-    open_s, close_s = ('‚', '‘') if lang == 'de' else ('‘', '’')
+    if _swiss(lang):
+        open_d, close_d, open_s, close_s = '«', '»', '‹', '›'
+    elif _base(lang) == 'de':
+        open_d, close_d, open_s, close_s = '„', '“', '‚', '‘'
+    else:
+        open_d, close_d, open_s, close_s = '“', '”', '‘', '’'
     for m in re.finditer('"', text):
         i = m.start()
         prev = text[i - 1] if i > 0 else ' '
@@ -154,7 +182,15 @@ def rule_quotes(text, lang):
             yield i, i + 1, 'warn', 'straight-single-quote', sugg, 'straight quotes are typewriter substitutes'
         else:
             yield i, i + 1, 'warn', 'straight-single-quote', '’ (apostrophe, as in Hans’) or ' + close_s + ' (closing single quote)', 'straight quotes are typewriter substitutes'
-    if lang == 'de':
+    if _swiss(lang):
+        for m in re.finditer('[„“”‚]', text):
+            sugg = '«' if m.group() == '„' else ('‹' if m.group() == '‚' else '«/»')
+            yield m.start(), m.end(), 'warn', 'quote-style-swiss', sugg, 'Swiss German uses guillemets «…» ‹…›'
+        for m in re.finditer('ß', text):
+            yield m.start(), m.end(), 'info', 'eszett-in-swiss', 'ss', 'Swiss German writes ss, never ß'
+        for m in re.finditer('—', text):
+            yield m.start(), m.end(), 'info', 'em-dash-in-german', ' – (spaced en dash)', 'German uses the spaced en dash as Gedankenstrich'
+    elif _base(lang) == 'de':
         for m in re.finditer('[“‘]', text):
             i = m.start()
             nxt = text[i + 1] if i + 1 < len(text) else ' '
@@ -177,13 +213,13 @@ def rule_dashes(text, lang):
     for m in re.finditer(r'(?<=\S) - (?=\S)', text):
         yield m.start() + 1, m.start() + 2, 'warn', 'spaced-hyphen', '– (en dash with spaces)', 'a hyphen joins words; a dash separates them'
     for m in re.finditer(r'(?<!-)--(?!-)', text):
-        yield m.start(), m.end(), 'warn', 'double-hyphen', '– (en dash)' + ('' if lang == 'de' else ' or — (em dash)'), 'two hyphens are a typewriter substitute for a dash'
+        yield m.start(), m.end(), 'warn', 'double-hyphen', '– (en dash)' + ('' if _base(lang) == 'de' else ' or — (em dash)'), 'two hyphens are a typewriter substitute for a dash'
     for m in re.finditer(r'(?<![\d.,/\-])(\d{1,4})-(\d{1,4})(?![\d\-/]|[.,]\d)', text):
         yield m.start(), m.end(), 'info', 'hyphen-range', m.group(1) + '–' + m.group(2), 'ranges take an en dash (bis-Strich), unspaced'
-    days = r'(?:Mo|Di|Mi|Do|Fr|Sa|So)' if lang == 'de' else r'(?:Mon|Tue|Wed|Thu|Fri|Sat|Sun)'
+    days = r'(?:Mo|Di|Mi|Do|Fr|Sa|So)' if _base(lang) == 'de' else r'(?:Mon|Tue|Wed|Thu|Fri|Sat|Sun)'
     for m in re.finditer(r'\b(%s)-(%s)\b' % (days, days), text):
         yield m.start(), m.end(), 'info', 'hyphen-range', m.group(1) + '–' + m.group(2), 'ranges take an en dash, unspaced'
-    if lang == 'de':
+    if _base(lang) == 'de':
         for m in re.finditer(r'(?<=\d) – (?=\d)', text):
             yield m.start(), m.end(), 'info', 'spaced-range-dash', '– without spaces (1990–2000)', 'German sets the bis-Strich without spaces'
 
@@ -205,7 +241,7 @@ def rule_spacing(text, lang, kind):
 
 
 def rule_abbreviations(text, lang):
-    if lang != 'de':
+    if _base(lang) != 'de':
         return
     for abbr in DE_ABBREVIATIONS:
         parts = [p.rstrip('.') for p in abbr.split(' ')]
@@ -228,7 +264,7 @@ def rule_units(text, lang):
         sp, unit = m.group('sp'), m.group('u')
         if sp in SPLIT_SAFE:
             continue
-        if unit in ('%', '‰') and lang != 'de':
+        if unit in ('%', '‰') and _base(lang) != 'de':
             if sp == '':
                 continue
             yield m.start(), m.end(), 'info', 'percent-spacing', m.group(1) + unit, 'English usually sets percent without a space'
@@ -242,7 +278,7 @@ def rule_units(text, lang):
 
 
 def rule_references(text, lang):
-    refs = r'(?:S|Nr|Abb|Tab|Kap|Bd|Aufl|Fn|Anm)' if lang == 'de' else r'(?:p|pp|No|Vol|Fig|Ch|Sec)'
+    refs = r'(?:S|Nr|Abb|Tab|Kap|Bd|Aufl|Fn|Anm)' if _base(lang) == 'de' else r'(?:p|pp|No|Vol|Fig|Ch|Sec)'
     for m in re.finditer(r'\b(%s)\.(?P<sp>[  ]?)(?=\d)' % refs, text):
         level = 'warn' if m.group('sp') == '' else 'info'
         yield m.start(), m.end() + 1, level, 'reference-spacing', m.group(1) + '.[NBSP]…', 'keep the abbreviation with its number (no-break space)'
@@ -261,8 +297,8 @@ def rule_times(text, lang):
 
 
 def rule_thousands(text, lang):
-    if lang != 'de':
-        return
+    if _base(lang) != 'de' or _swiss(lang):
+        return  # Swiss German groups thousands with an apostrophe (18’450)
     for m in re.finditer(r'(?<![\d.,])\d{1,3}(?:\.\d{3})+(?!\d|[.,]\d)', text):
         grouped = m.group().replace('.', '[NNBSP]')
         yield m.start(), m.end(), 'info', 'thousands-separator', grouped, 'in running text a narrow no-break space groups digits without looking like a decimal point (a dot is acceptable in tables)'
@@ -286,7 +322,7 @@ def check_file(path, forced_lang, max_per_rule):
     with open(path, encoding='utf-8', errors='replace') as fh:
         raw = fh.read()
     text, offsets = extract(raw, kind)
-    lang = forced_lang if forced_lang in ('de', 'en') else detect_lang(raw, kind, text)
+    lang = forced_lang if forced_lang != 'auto' else detect_lang(raw, kind, text)
     line_starts = [0] + [m.end() for m in re.finditer('\n', raw)]
 
     findings = []
@@ -300,6 +336,14 @@ def check_file(path, forced_lang, max_per_rule):
                 if f[3] != 'thin-space-breaks' or not any(s <= f[0] < e for s, e in specific)]
 
     results, per_rule = [], {}
+    if kind == 'html':
+        tag, at = declared_lang(raw)
+        guess = content_lang(text)
+        if tag and guess and _base(tag) != guess:
+            line = bisect.bisect_right(line_starts, at)
+            results.append((path, line, at - line_starts[line - 1] + 1, 'warn', 'lang-mismatch',
+                            'lang="%s"' % tag, 'lang="%s" (with region if it matters, e.g. de-CH)' % guess,
+                            'the text reads as %s; hyphenation, quotation marks and screen readers follow lang' % guess))
     for start, end, level, rule, sugg, reason in sorted(findings, key=lambda f: f[0]):
         per_rule[rule] = per_rule.get(rule, 0) + 1
         if per_rule[rule] > max_per_rule:
@@ -330,7 +374,7 @@ def iter_paths(paths):
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.split('\n')[0])
     ap.add_argument('paths', nargs='+')
-    ap.add_argument('--lang', default='auto', choices=['auto', 'de', 'en'])
+    ap.add_argument('--lang', default='auto', choices=['auto', 'de', 'de-ch', 'en'])
     ap.add_argument('--max-per-rule', type=int, default=25)
     args = ap.parse_args(argv)
 
