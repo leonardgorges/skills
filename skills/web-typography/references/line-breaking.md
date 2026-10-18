@@ -43,6 +43,7 @@ Runts only matter in paragraphs of two or more lines. Judge them at the widths p
 
 - **`pretty` is safe for normal running text.** Its cost depends on paragraph length, not on how many elements use it. Only very long unbroken text, or text that rewraps continuously during an animation, needs care.
 - **`balance`** makes all lines roughly equal. That usually leaves the block narrower than its container. Use it for headings, captions, pull quotes and card titles. On long paragraphs it produces ragged block widths; use `pretty` there.
+- **`pretty` and justified text:** in Chromium, `pretty` shortens some lines to avoid a runt, and justification then stretches those lines, so word gaps can get *wider*. Measured in a test: 8 of 14 lines with gaps over 2× without `pretty`, 11 of 14 with it, at 375 px. Measure both before keeping it on justified paragraphs.
 - Use `stable` for `contenteditable` and live-editing views, so earlier lines don't jump while someone types.
 - **Firefox ignores `pretty`.** Treat it as progressive enhancement. Where a runt would be serious (headlines, short intros), add a fallback from section 4.
 

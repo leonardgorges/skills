@@ -69,7 +69,7 @@ Read [references/line-breaking.md](references/line-breaking.md) before changing 
 - **Counts as a runt:** the last line holds one word or a hyphenated fragment, or it is shorter than the next paragraph's indent. A softer case is a last line shorter than about a quarter of the measure. That threshold is a tunable starting value, not a canon.
 - **Why it matters:** it punches a hole into the text block, and the paragraph seems to end twice. In a heading, a lone word breaks the sense.
 - **Fix ladder** (prefer the earlier steps):
-  1. `text-wrap: pretty` on running text, and `balance` on headings and short blocks. This is progressive enhancement: Firefox ignores `pretty`, and Chromium only rebalances the last few lines.
+  1. `text-wrap: pretty` on running text, and `balance` on headings and short blocks. This is progressive enhancement: Firefox ignores `pretty`, and Chromium only rebalances the last few lines. On **justified** text, measure before keeping `pretty`: in Chromium it can widen word gaps, because the shorter lines it creates get stretched.
   2. Hyphenation that works: a correct `lang`, `hyphens: auto`, sensible limits.
   3. Adjust the system: measure, size or container width. When runts appear everywhere, the measure is usually the cause.
   4. Bind locally: a no-break space between the last two words when the pair is short (about 15 characters or fewer), plus sense groups that must stay together (`z. B.`, `10 kg`, `S. 12`, `Dr. Meier`). Do this in templates or a build step, not by hand inside CMS content.
@@ -158,6 +158,7 @@ body {
   hyphenate-limit-chars: 6 3 3; /* starting value: words of 6+ letters, 3 on each side (no Safari support) */
   text-wrap: pretty;            /* Chromium: last lines; Safari 26+: whole paragraph; Firefox: ignored */
 }
+.prose:lang(de) { font-variant-ligatures: no-common-ligatures; } /* browsers can't see compound joints (Auf|lage, Kauf|leute) */
 
 h1, h2, h3 { line-height: 1.15; text-wrap: balance; hyphens: manual; }
 h1 { font-size: clamp(2rem, 1.6rem + 2vw, 3.5rem); letter-spacing: -0.01em; } /* max/min = 1.75 */

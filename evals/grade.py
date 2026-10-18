@@ -80,6 +80,7 @@ def decls(rules, prop_re):
 
 def visible_words(raw):
     raw = re.sub(r'<(script|style)\b.*?</\1>', ' ', raw, flags=re.S | re.I)
+    raw = re.sub(r'<!--.*?-->', ' ', raw, flags=re.S)
     raw = re.sub(r'<[^>]+>', ' ', raw)
     raw = html.unescape(raw)
     trans = {ord(c): '"' for c in '„“”»«'}
