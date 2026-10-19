@@ -14,7 +14,6 @@ Agent skills for Claude Code and Codex, in the open [Agent Skills](https://agent
 ## Layout
 
 ```
-research/                      source research the skills are distilled from
 skills/web-typography/         core skill: SKILL.md, references/, scripts/
 skills/review-typography/      review skill: SKILL.md, STANDARDS.md, agents/openai.yaml
 fixtures/                      test pages with deliberate typography problems

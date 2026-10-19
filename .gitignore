@@ -8,5 +8,3 @@ __pycache__/
 # macOS
 .DS_Store
 
-# local dev tooling
-.claude/launch.json
