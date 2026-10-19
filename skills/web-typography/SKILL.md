@@ -1,6 +1,7 @@
 ---
 name: web-typography
 description: Typesetting judgement for web text in German and English (HTML/CSS, multi-column layouts, print stylesheets, CSS-generated PDFs). Use when writing, styling or fixing text and layout - single words stranded on a paragraph's last line (runts, Wortwaisen), headline wrapping, hyphenation, line length and leading, page margins, widows and orphans (Hurenkind, Schusterjunge) across columns and pages, fluid and responsive type sizes, type scales, choosing or pairing typefaces, quotation marks, dashes and non-breaking spaces. Use it even when the user only says text looks off on mobile, wants a nicer article, blog or landing page, or is setting up fonts or a print or PDF export. Explains the reasoning behind each adjustment. Not for InDesign or LaTeX. For a formal review report, use the review-typography skill.
+license: MIT
 ---
 
 # Web typography

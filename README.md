@@ -62,3 +62,7 @@ ln -s "$PWD/skills/review-typography" ~/.agents/skills/review-typography
 | Arguments | appended to the skill automatically | part of your message |
 
 Each tool ignores the other's setting, so one folder works in both. The scripts need only Python 3.9 or later.
+
+## License
+
+MIT, see [LICENSE](LICENSE).

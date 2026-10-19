@@ -2,6 +2,7 @@
 name: review-typography
 description: Strict typographic review of web pages, multi-column layouts, print stylesheets and CSS-generated PDFs in German or English. Checks line breaks and runts, hyphenation, measure and leading, widows and orphans, fluid type and zoom, typeface pairing and microtypography. Returns a fixed report with severity, before-and-after fixes, the reason for each, and a verdict. Read-only until the user asks for fixes.
 disable-model-invocation: true
+license: MIT
 ---
 
 # Reviewing typography
