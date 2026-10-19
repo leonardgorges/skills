@@ -15,15 +15,25 @@ Agent skills for Claude Code and Codex, in the open [Agent Skills](https://agent
 
 ```
 research/                      source research the skills are distilled from
-skills/web-typography/         core skill: SKILL.md, references/, scripts/, evals/
-skills/review-typography/      review skill: SKILL.md, STANDARDS.md, agents/openai.yaml, evals/
+skills/web-typography/         core skill: SKILL.md, references/, scripts/
+skills/review-typography/      review skill: SKILL.md, STANDARDS.md, agents/openai.yaml
 fixtures/                      test pages with deliberate typography problems
-evals/grade.py                 grading script for the test rounds
+evals/                         test prompts and grading script (not part of the installed skills)
 ```
 
 Some numbers appear in both skills, such as thresholds and browser support. They live in `skills/web-typography/references/` and in `skills/review-typography/STANDARDS.md`, so update both together.
 
 ## Install
+
+With the [skills CLI](https://skills.sh) (works for Claude Code, Codex and many other agents):
+
+```bash
+npx skills add leonardgorges/skills
+```
+
+Pick agents and scope with `-a claude-code -a codex` and `-g` (global instead of per project); `--list` shows the skills without installing.
+
+### Manual install
 
 Install both skills next to each other: the review skill uses the core skill's scripts from its sibling folder. Install only after testing; once installed, the skills are active in every session.
 
